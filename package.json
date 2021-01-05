@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "test": "npm run prepare && jest",
-    "prepare": "acady build",
     "dev": "acady dev",
     "deploy": "acady deploy"
   },
