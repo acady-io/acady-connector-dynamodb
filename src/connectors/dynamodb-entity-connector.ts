@@ -4,7 +4,6 @@ import AttributeMap = DocumentClient.AttributeMap;
 import BatchGetResponseMap = DocumentClient.BatchGetResponseMap;
 import {ArrayHelper} from "@web-academy/core-lib";
 
-
 export class DynamodbEntityConnector {
     private static BATCH_SIZE = 25;
 
@@ -146,7 +145,6 @@ export class DynamodbEntityConnector {
             });
         });
     }
-
 
     static async scan(tableName: string, indexName?: string, queryFilter?: any, limit?: number, additionalParams?: any): Promise<AttributeMap[]> {
 
