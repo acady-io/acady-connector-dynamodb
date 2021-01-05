@@ -41,7 +41,7 @@
     "aws-sdk": "^2.821.0"
   },
   "release": {
-    "repositoryUrl": "https://github.com/acady-io/acady.git",
+    "repositoryUrl": "https://github.com/acady-io/acady-connector-dynamodb.git",
     "branches": [
       "+([0-9])?(.{+([0-9]),x}).x",
       "master",
