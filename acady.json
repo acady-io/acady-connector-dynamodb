@@ -1,0 +1,29 @@
+{
+  "hosting": {
+    "hostingProvider": "npm",
+    "providerData": {
+      "npmPackage": "acady-connector-dynamodb",
+      "npmOrg": "",
+      "npmFullPackage": "acady-connector-dynamodb"
+    }
+  },
+  "accounts": {
+    "github": {
+      "accountId": "christian-schab"
+    },
+    "npm": {
+      "accountId": "christian.schab"
+    }
+  },
+  "repository": {
+    "provider": "github",
+    "gitUrl": "https://github.com/acady-io/acady-connector-dynamodb.git",
+    "fullName": "acady-io/acady-connector-dynamodb"
+  },
+  "name": "Acady Connector DynamoDB",
+  "id": "acady-connector-dynamodb",
+  "projectId": "lMy5n7wZ3ubgyXMuqtVts",
+  "type": "backend",
+  "subtype": "backend_library",
+  "template": "template-backend-library"
+}
