@@ -1,15 +1,30 @@
 import {DynamodbEntityConnector} from "../src";
 
-test('DynamodbEntityConnector.cleanItem', () => {
-    const input = {
-        id: 'test',
-        foo: '',
-        bar: undefined
-    };
-    const expected = {
-        id: 'test'
+let connector: DynamodbEntityConnector;
+
+beforeAll(() => {
+    const tableName = 'test-' + Date.now();
+    connector = new DynamodbEntityConnector(tableName, 'id');
+})
+
+test('DynamodbEntityConnector: Read and Write', async () => {
+
+    const id = 'test-entity-' + Date.now();
+    const writeEntity = {
+        id,
+        foo: 'bar',
+        bar: {
+            foo: true
+        }
     };
 
-    const output = DynamodbEntityConnector.cleanItem(input);
-    expect(output).toEqual(expected);
+    await connector.storeItem(writeEntity);
+    const readEntity = await connector.getItem({id});
+
+    expect(readEntity).toEqual(writeEntity);
 });
+
+afterAll(() => {
+    return connector.deleteTable();
+});
+

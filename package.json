@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "test": "npm run prepare && jest",
+    "local-test": "acady build && node ./lib/test",
     "prepare": "acady build",
     "dev": "acady dev",
     "deploy": "acady deploy"
@@ -30,7 +31,8 @@
       "ts",
       "tsx",
       "js"
-    ]
+    ],
+    "testTimeout": 30000
   },
   "author": "schab",
   "repository": {
