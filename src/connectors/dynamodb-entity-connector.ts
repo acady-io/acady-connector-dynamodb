@@ -17,6 +17,8 @@ export class DynamodbEntityConnector {
         this.tableName = tableName;
         this.partitionKey = partitionKey;
         this.sortKey = sortKey;
+
+        console.log("AWS_ACCESS_KEY_ID", process.env.AWS_ACCESS_KEY_ID);
         this.client = new AWS.DynamoDB.DocumentClient();
     }
 
