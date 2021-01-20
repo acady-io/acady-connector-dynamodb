@@ -18,8 +18,7 @@ export class DynamodbEntityConnector {
         this.partitionKey = partitionKey;
         this.sortKey = sortKey;
 
-        console.log("AWS_ACCESS_KEY_ID", process.env.AWS_ACCESS_KEY_ID);
-        this.client = new AWS.DynamoDB.DocumentClient();
+        this.client = this.buildClient();
     }
 
     async batchGet(keys: any[]): Promise<AttributeMap[] | undefined> {
@@ -400,5 +399,22 @@ export class DynamodbEntityConnector {
         } catch (e) {
             reject(err);
         }
+    }
+
+    private buildClient(): DocumentClient {
+        const config: any = {
+
+        };
+
+        if (process.env.AWS_ACCESS_KEY_ID) {
+            config.accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+            config.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+        }
+
+        if (process.env.AWS_REGION) {
+            config.region = process.env.AWS_REGION;
+        }
+
+        return new AWS.DynamoDB.DocumentClient(config);
     }
 }
