@@ -409,10 +409,16 @@ export class DynamodbEntityConnector {
         if (process.env.AWS_ACCESS_KEY_ID) {
             config.accessKeyId = process.env.AWS_ACCESS_KEY_ID;
             config.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+            console.log("Use ENV credentials");
+        } else {
+            console.log("Don't Use ENV credentials");
         }
 
         if (process.env.AWS_REGION) {
             config.region = process.env.AWS_REGION;
+            console.log("Use ENV Region");
+        } else {
+            console.log("Don't Use ENV Region");
         }
 
         return new AWS.DynamoDB.DocumentClient(config);
