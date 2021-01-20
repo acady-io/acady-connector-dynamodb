@@ -1,9 +1,9 @@
 import * as AWS from "aws-sdk";
+import {AWSError, DynamoDB} from "aws-sdk";
 import {DocumentClient} from "aws-sdk/lib/dynamodb/document_client";
+import {ArrayHelper, WaitHelper} from "@web-academy/core-lib";
 import AttributeMap = DocumentClient.AttributeMap;
 import BatchGetResponseMap = DocumentClient.BatchGetResponseMap;
-import {ArrayHelper, WaitHelper} from "@web-academy/core-lib";
-import {AWSError, DynamoDB} from "aws-sdk";
 
 export class DynamodbEntityConnector {
     private static BATCH_SIZE = 25;
@@ -411,9 +411,11 @@ export class DynamodbEntityConnector {
             config.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
         }
 
-        if (process.env.AWS_REGION) {
+        if (process.env.AWS_REGION)
             config.region = process.env.AWS_REGION;
-        }
+
+        if (process.env.AWS_SESSION_TOKEN)
+            config.sessionToken = process.env.AWS_SESSION_TOKEN;
 
         return new AWS.DynamoDB.DocumentClient(config);
     }
