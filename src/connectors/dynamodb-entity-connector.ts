@@ -19,6 +19,11 @@ export class DynamodbEntityConnector {
 
     constructor(tableName: string, partitionKey: string, sortKey?: string) {
         this.tableName = tableName;
+
+        if (process.env.DDB_PREFIX) {
+            this.tableName = process.env.DDB_PREFIX + this.tableName;
+        }
+
         this.partitionKey = partitionKey;
         this.sortKey = sortKey;
 
