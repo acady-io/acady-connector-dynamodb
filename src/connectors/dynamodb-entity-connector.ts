@@ -4,6 +4,9 @@ import {DocumentClient} from "aws-sdk/lib/dynamodb/document_client";
 import {ArrayHelper, WaitHelper} from "@web-academy/core-lib";
 import AttributeMap = DocumentClient.AttributeMap;
 import BatchGetResponseMap = DocumentClient.BatchGetResponseMap;
+import QueryInput = DocumentClient.QueryInput;
+import KeyConditions = DocumentClient.KeyConditions;
+import FilterConditionMap = DocumentClient.FilterConditionMap;
 
 export class DynamodbEntityConnector {
     private static BATCH_SIZE = 25;
@@ -12,6 +15,7 @@ export class DynamodbEntityConnector {
     private readonly tableName: string;
     private readonly partitionKey: string;
     private readonly sortKey?: string;
+    private readonly managementClient: DynamoDB;
 
     constructor(tableName: string, partitionKey: string, sortKey?: string) {
         this.tableName = tableName;
@@ -19,6 +23,7 @@ export class DynamodbEntityConnector {
         this.sortKey = sortKey;
 
         this.client = this.buildClient();
+        this.managementClient = this.buildManagementClient();
     }
 
     async batchGet(keys: any[]): Promise<AttributeMap[] | undefined> {
@@ -209,16 +214,16 @@ export class DynamodbEntityConnector {
         });
     }
 
-    async query(keyConditions: any, indexName?: string, queryFilter?: any, limit?: number, additionalParams?: any): Promise<AttributeMap[]> {
+    async query(keyConditions: KeyConditions, indexName?: string, queryFilter?: FilterConditionMap, limit?: number, additionalParams?: any): Promise<AttributeMap[]> {
 
         const items: AttributeMap[] = [];
-        let params = {
+        let params: QueryInput = {
             TableName: this.tableName,
             KeyConditions: keyConditions,
             IndexName: indexName,
             QueryFilter: queryFilter,
             Limit: limit,
-            ExclusiveStartKey: null
+            ExclusiveStartKey: undefined
         };
 
         if (additionalParams) {
@@ -228,7 +233,8 @@ export class DynamodbEntityConnector {
         let lastEvaluatedKey = null;
 
         do {
-            params.ExclusiveStartKey = lastEvaluatedKey;
+            if (lastEvaluatedKey)
+                params.ExclusiveStartKey = lastEvaluatedKey;
             const response = await this._query(params);
 
             lastEvaluatedKey = response.LastEvaluatedKey;
@@ -243,7 +249,7 @@ export class DynamodbEntityConnector {
         return items;
     }
 
-    private async _query(params: any, retry?: boolean): Promise<any> {
+    private async _query(params: QueryInput, retry?: boolean): Promise<any> {
         const self = this;
         return new Promise((resolve, reject) => {
             self.client.query(params, function (err, data) {
@@ -314,7 +320,7 @@ export class DynamodbEntityConnector {
     }
 
     private async _createTable(params: DynamoDB.Types.CreateTableInput) {
-        const client = new AWS.DynamoDB();
+        const client = this.managementClient;
         return new Promise((resolve, reject) => {
             client.createTable(params, function (err, data) {
                 if (err) reject(err);
@@ -331,7 +337,7 @@ export class DynamodbEntityConnector {
     }
 
     private async _deleteTable(params: DynamoDB.Types.DeleteTableInput) {
-        const client = new AWS.DynamoDB();
+        const client = this.managementClient;
         return new Promise((resolve, reject) => {
             client.deleteTable(params, function (err, data) {
                 if (err) reject(err);
@@ -348,7 +354,7 @@ export class DynamodbEntityConnector {
     }
 
     private async _describeTable(params: DynamoDB.Types.DescribeTableInput): Promise<DynamoDB.Types.TableDescription | undefined> {
-        const client = new AWS.DynamoDB();
+        const client = this.managementClient;
         return new Promise((resolve, reject) => {
             client.describeTable(params, function (err, data) {
                 if (err) reject(err);
@@ -402,6 +408,14 @@ export class DynamodbEntityConnector {
     }
 
     private buildClient(): DocumentClient {
+        return new AWS.DynamoDB.DocumentClient(this.buildConfig());
+    }
+
+    private buildManagementClient(): AWS.DynamoDB {
+        return new AWS.DynamoDB(this.buildConfig());
+    }
+
+    private buildConfig() {
         const config: any = {
 
         };
@@ -417,6 +431,6 @@ export class DynamodbEntityConnector {
         if (process.env.AWS_SESSION_TOKEN)
             config.sessionToken = process.env.AWS_SESSION_TOKEN;
 
-        return new AWS.DynamoDB.DocumentClient(config);
+        return config;
     }
 }
