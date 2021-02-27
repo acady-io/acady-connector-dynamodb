@@ -147,12 +147,13 @@ export class DynamodbEntityConnector {
         });
     }
 
-    async storeItem(item) {
+    async storeItem(item: any, params?: any) {
         item = this._cleanItem(item);
 
         return this._storeItem({
             TableName: this.tableName,
-            Item: item
+            Item: item,
+            ...params
         });
     };
 
