@@ -62,10 +62,11 @@ export class DynamodbEntityConnector {
         });
     }
 
-    async getItem(key: any): Promise<AttributeMap | undefined> {
+    async getItem(key: any, params?: any): Promise<AttributeMap | undefined> {
         return this._getItem({
             TableName: this.tableName,
-            Key: key
+            Key: key,
+            ...params
         });
     };
 
@@ -83,10 +84,11 @@ export class DynamodbEntityConnector {
         });
     }
 
-    async deleteItem(key: any) {
+    async deleteItem(key: any, params?: any) {
         return this._deleteItem({
             TableName: this.tableName,
-            Key: key
+            Key: key,
+            ...params
         });
     };
 
