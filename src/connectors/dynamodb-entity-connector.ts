@@ -172,6 +172,9 @@ export class DynamodbEntityConnector {
 
     private async _storeItem(params: any, retry?: boolean) {
         const self = this;
+        if (this.debug) {
+            console.log('DynamodbEntityConnector._storeItem', params, JSON.stringify(params));
+        }
         return new Promise((resolve, reject) => {
             self.client.put(params, function (err) {
                 if (err) {
