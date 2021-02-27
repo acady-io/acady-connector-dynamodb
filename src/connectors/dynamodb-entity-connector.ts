@@ -16,6 +16,7 @@ export class DynamodbEntityConnector {
     private readonly partitionKey: string;
     private readonly sortKey?: string;
     private readonly managementClient: DynamoDB;
+    public debug: boolean = false;
 
     constructor(tableName: string, partitionKey: string, sortKey?: string) {
         this.tableName = tableName;
@@ -72,6 +73,9 @@ export class DynamodbEntityConnector {
 
     private async _getItem(params: any, retry?: boolean): Promise<AttributeMap | undefined> {
         const self = this;
+        if (this.debug) {
+            console.log('DynamodbEntityConnector._getItem', params, JSON.stringify(params));
+        }
         return new Promise((resolve, reject) => {
             self.client.get(params, function (err, data) {
                 if (err) {
@@ -94,6 +98,9 @@ export class DynamodbEntityConnector {
 
     private async _deleteItem(params: any, retry?: boolean) {
         const self = this;
+        if (this.debug) {
+            console.log('DynamodbEntityConnector._deleteItem', params, JSON.stringify(params));
+        }
         return new Promise((resolve, reject) => {
             self.client.delete(params, function (err, data) {
                 if (err) {
@@ -137,6 +144,10 @@ export class DynamodbEntityConnector {
 
     private async _storeItems(params: any, retry?: boolean) {
         const self = this;
+        if (this.debug) {
+            console.log('DynamodbEntityConnector._storeItems', params, JSON.stringify(params));
+        }
+
         return new Promise((resolve, reject) => {
             self.client.batchWrite(params, function (err) {
                 if (err) {
