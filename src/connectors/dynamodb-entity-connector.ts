@@ -8,6 +8,7 @@ import QueryInput = DocumentClient.QueryInput;
 import KeyConditions = DocumentClient.KeyConditions;
 import FilterConditionMap = DocumentClient.FilterConditionMap;
 import UpdateItemInput = DocumentClient.UpdateItemInput;
+import ExpressionAttributeValueMap = DocumentClient.ExpressionAttributeValueMap;
 
 export class DynamodbEntityConnector {
     private static BATCH_SIZE = 25;
@@ -161,12 +162,13 @@ export class DynamodbEntityConnector {
         });
     }
 
-    async updateItem(key: any, updateExpression: string): Promise<AttributeMap | undefined> {
+    async updateItem(key: any, updateExpression: string, expressionAttributeValues?: ExpressionAttributeValueMap): Promise<AttributeMap | undefined> {
         return this._updateItem({
             TableName: this.tableName,
             Key: key,
             UpdateExpression: updateExpression,
-            ReturnValues: "ALL_NEW"
+            ReturnValues: "ALL_NEW",
+            ExpressionAttributeValues: expressionAttributeValues
         });
     }
 
