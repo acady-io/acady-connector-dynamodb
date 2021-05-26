@@ -7,6 +7,7 @@ import BatchGetResponseMap = DocumentClient.BatchGetResponseMap;
 import QueryInput = DocumentClient.QueryInput;
 import KeyConditions = DocumentClient.KeyConditions;
 import FilterConditionMap = DocumentClient.FilterConditionMap;
+import UpdateItemInput = DocumentClient.UpdateItemInput;
 
 export class DynamodbEntityConnector {
     private static BATCH_SIZE = 25;
@@ -160,6 +161,32 @@ export class DynamodbEntityConnector {
         });
     }
 
+    async updateItem(key: any, updateExpression: string): Promise<AttributeMap | undefined> {
+        return this._updateItem({
+            TableName: this.tableName,
+            Key: key,
+            UpdateExpression: updateExpression,
+            ReturnValues: "ALL_NEW"
+        });
+    }
+
+    protected async _updateItem(params: UpdateItemInput, retry?: boolean): Promise<AttributeMap | undefined> {
+        const self = this;
+        if (this.debug) {
+            console.log('DynamodbEntityConnector._updateItem', params, JSON.stringify(params));
+        }
+        return new Promise((resolve, reject) => {
+            self.client.update(params, function (err, data) {
+                if (err) {
+                    if (retry)
+                        reject(err);
+                    else
+                        self._solveError(err, params, '_updateItem', resolve, reject);
+                } else resolve(data.Attributes);
+            });
+        });
+    }
+
     async storeItem(item: any, params?: any) {
         item = this._cleanItem(item);
 
@@ -169,6 +196,8 @@ export class DynamodbEntityConnector {
             ...params
         });
     };
+
+
 
     private async _storeItem(params: any, retry?: boolean) {
         const self = this;
