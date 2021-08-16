@@ -14,9 +14,9 @@ export class DynamodbEntityConnector {
     private static BATCH_SIZE = 25;
     private client: DocumentClient;
 
-    private readonly tableName: string;
-    private readonly partitionKey: string;
-    private readonly sortKey?: string;
+    protected readonly tableName: string;
+    protected readonly partitionKey: string;
+    protected readonly sortKey?: string;
     private readonly managementClient: DynamoDB;
     public debug: boolean = false;
 
