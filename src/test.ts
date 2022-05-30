@@ -1,27 +1,25 @@
-import {DynamodbEntityConnector} from "./connectors/dynamodb-entity-connector";
+import { DynamodbEntityConnector } from './connectors/dynamodb-entity-connector';
 
 async function testDynamodbEntityConnector() {
+  const client = new DynamodbEntityConnector('pbaa-customers', 'customerId');
 
-    const client = new DynamodbEntityConnector('pbaa-customers', 'customerId');
+  const newCustomer = {
+    customerId: 'TEST',
+    name: 'Max Mustermann',
+  };
+  await client.storeItem(newCustomer);
 
-    const newCustomer = {
-        customerId: 'TEST',
-        name: 'Max Mustermann'
-    };
-    await client.storeItem(newCustomer);
+  const readCustomer = await client.getItem({ customerId: 'TEST' });
 
-    const readCustomer = await client.getItem({customerId: 'TEST'});
+  console.log(readCustomer);
 
-    console.log(readCustomer);
-
-
+  
 }
 
-
 async function allTests() {
-    await testDynamodbEntityConnector();
+  // await testDynamodbEntityConnector();
 }
 
 allTests().then(() => {
-    console.log("finished");
-})
+  console.log('finished');
+});

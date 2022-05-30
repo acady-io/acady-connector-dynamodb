@@ -121,7 +121,7 @@ export class DynamodbEntityConnector {
       console.log(
         'Deleted ' + items.length + ' in ' + promises.length + ' Promises'
       );
-    } catch (e) {
+    } catch (e: any) {
       const message =
         'EXCEPTION in DynamodbEntityConnector.deleteItems for table ' +
         this.tableName;
@@ -204,7 +204,7 @@ export class DynamodbEntityConnector {
       console.log(
         'Stored ' + items.length + ' in ' + promises.length + ' Promises'
       );
-    } catch (e) {
+    } catch (e: any) {
       console.log(
         'EXCEPTION in DynamodbEntityConnector.storeItems for table ' +
           this.tableName,
