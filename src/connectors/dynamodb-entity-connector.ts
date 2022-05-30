@@ -94,7 +94,7 @@ export class DynamodbEntityConnector {
     });
   }
 
-  async deleteItems(items: any[]) {
+  async deleteItems(items: any[], params?: any) {
     try {
       const chunks = ArrayHelper.chunk(
         items,
@@ -105,7 +105,8 @@ export class DynamodbEntityConnector {
         const tableRequest = items.map((item) => {
           return {
             DeleteRequest: {
-              Item: this._cleanItem(item),
+              Key: item,
+              ...params,
             },
           };
         });
