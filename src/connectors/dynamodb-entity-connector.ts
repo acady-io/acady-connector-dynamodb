@@ -32,7 +32,6 @@ export class DynamodbEntityConnector {
     this.sortKey = sortKey;
 
     this.config = config;
-
     this.client = this.buildClient();
     this.managementClient = this.buildManagementClient();
   }
