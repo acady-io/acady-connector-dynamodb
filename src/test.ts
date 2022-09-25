@@ -1,4 +1,4 @@
-import { DynamodbEntityConnector } from './connectors/dynamodb-entity-connector';
+import {DynamodbEntityConnector} from './connectors/dynamodb-entity-connector';
 
 async function testDynamodbEntityConnector() {
   const client = new DynamodbEntityConnector('pbaa-customers', 'customerId');
@@ -13,11 +13,11 @@ async function testDynamodbEntityConnector() {
 
   console.log(readCustomer);
 
-  
+
 }
 
 async function allTests() {
-  // await testDynamodbEntityConnector();
+ await testDynamodbEntityConnector();
 }
 
 allTests().then(() => {
