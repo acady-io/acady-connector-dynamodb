@@ -1,7 +1,7 @@
 import * as AWS from 'aws-sdk';
-import { AWSError, DynamoDB } from 'aws-sdk';
-import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import { ArrayHelper, WaitHelper } from '@web-academy/core-lib';
+import {AWSError, DynamoDB} from 'aws-sdk';
+import {DocumentClient} from 'aws-sdk/lib/dynamodb/document_client';
+import {ArrayHelper, WaitHelper} from '@web-academy/core-lib';
 import AttributeMap = DocumentClient.AttributeMap;
 import BatchGetResponseMap = DocumentClient.BatchGetResponseMap;
 import QueryInput = DocumentClient.QueryInput;
@@ -19,8 +19,9 @@ export class DynamodbEntityConnector {
   protected readonly sortKey?: string;
   private readonly managementClient: DynamoDB;
   public debug: boolean = false;
+  private config: any;
 
-  constructor(tableName: string, partitionKey: string, sortKey?: string) {
+  constructor(tableName: string, partitionKey: string, sortKey?: string, config?: any) {
     this.tableName = tableName;
 
     if (process.env.DDB_PREFIX) {
@@ -29,6 +30,8 @@ export class DynamodbEntityConnector {
 
     this.partitionKey = partitionKey;
     this.sortKey = sortKey;
+
+    this.config = config;
 
     this.client = this.buildClient();
     this.managementClient = this.buildManagementClient();
@@ -568,18 +571,19 @@ export class DynamodbEntityConnector {
   }
 
   private buildConfig() {
-    const config: any = {};
+    if (this.config) return this.config;
 
+    this.config = {};
     if (process.env.AWS_ACCESS_KEY_ID) {
-      config.accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-      config.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+      this.config.accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+      this.config.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
     }
 
-    if (process.env.AWS_REGION) config.region = process.env.AWS_REGION;
+    if (process.env.AWS_REGION) this.config.region = process.env.AWS_REGION;
 
     if (process.env.AWS_SESSION_TOKEN)
-      config.sessionToken = process.env.AWS_SESSION_TOKEN;
+      this.config.sessionToken = process.env.AWS_SESSION_TOKEN;
 
-    return config;
+    return this.config;
   }
 }
