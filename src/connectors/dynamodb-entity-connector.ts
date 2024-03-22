@@ -204,6 +204,7 @@ export class DynamodbEntityConnector {
       });
 
       await Promise.all(promises);
+      if (this.debug)
       console.log(
         'Stored ' + items.length + ' in ' + promises.length + ' Promises'
       );
